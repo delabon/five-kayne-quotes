@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,6 +23,9 @@ class AuthController extends Controller
                 'email' => 'Invalid login credentials.'
             ]);
         }
+
+        session()->regenerate();
+        session()->put('token', auth()->user()->createToken('auth_token')->plainTextToken);
 
         return to_route('home')->with([
             'success' => 'You have signed-in successfully.'

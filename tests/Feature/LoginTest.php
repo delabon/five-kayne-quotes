@@ -24,6 +24,9 @@ class LoginTest extends TestCase
     #[Test]
     public function logins_user_successfully(): void
     {
+        session()->start();
+        $sessionIdBefore = session()->id();
+
         $credentials = [
             'email' => 'john@test.com',
             'password' => '12345'
@@ -34,12 +37,18 @@ class LoginTest extends TestCase
             ])
         );
 
-        $this->post('/login', $credentials)
+        $response = $this->post('/login', $credentials)
             ->assertRedirectToRoute('home')
             ->assertSessionHas('success', 'You have signed-in successfully.');
 
         $this->assertSame($user->id, auth()->user()->id);
         $this->assertSame($user->email, auth()->user()->email);
+
+        // Make sure the session is regenerated after login
+        $this->assertNotSame($sessionIdBefore, session()->id());
+
+        // Make sure a new token is generated
+        $response->assertSessionHas('token');
     }
 
     #[Test]
