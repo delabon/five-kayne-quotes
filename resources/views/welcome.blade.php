@@ -11,7 +11,7 @@
     </head>
     <body class="font-sans antialiased">
         <div class="app flex justify-center w-full">
-            <div class="container">
+            <div class="container p-4">
                 @livewire('fetch-quotes')
 
                 @livewireScripts
