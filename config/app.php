@@ -123,4 +123,5 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'random_quotes_number' => env('APP_RANDOM_QUOTES_NUM', 5),
 ];
