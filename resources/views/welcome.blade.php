@@ -6,12 +6,16 @@
 
         <title>Laravel</title>
 
-        <!-- Styles / Scripts -->
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
         @livewireStyles
     </head>
-    <body class="font-sans antialiased dark:bg-black dark:text-white/50">
-        @livewire('fetch-quotes')
+    <body class="font-sans antialiased">
+        <div class="app flex justify-center w-full">
+            <div class="container">
+                @livewire('fetch-quotes')
 
-        @livewireScripts
+                @livewireScripts
+            </div>
+        </div>
     </body>
 </html>
