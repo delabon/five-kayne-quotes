@@ -4,8 +4,8 @@ Open your terminal and run the following:
 
 ```sh
 composer install
-vendor/bin/sail up -d
 cp .env.example .env
+vendor/bin/sail up --build -d
 vendor/bin/sail artisan key:generate
 vendor/bin/sail artisan migrate # select 'yes'
 vendor/bin/sail artisan db:seed
