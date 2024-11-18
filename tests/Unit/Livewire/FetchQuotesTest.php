@@ -38,31 +38,46 @@ class FetchQuotesTest extends TestCase
     #[Test]
     public function method_fetchQuotes_fetches_quotes(): void
     {
-        Config::set('app.random_quotes_number', 2);
-        Http::fake([
-            config('app.url') . '/api/quotes' => Http::sequence()
-                ->push(['quotes' => ['I am the best', 'I am the greatest']], 200),
-        ]);
+        $this->prepareFakeHttpResponse();
 
         $this->assertIsArray($this->fetchQuotes->quotes);
         $this->assertEmpty($this->fetchQuotes->quotes);
-        $this->assertSame('', $this->fetchQuotes->uniqueKey);
 
         $this->fetchQuotes->fetchQuotes();
 
-        $this->assertNotEmpty($this->fetchQuotes->uniqueKey);
         $this->assertRandomUniqueQuotes($this->fetchQuotes->quotes, 2);
     }
 
     #[Test]
     public function method_mount_fetches_quotes(): void
     {
-        $this->method_fetchQuotes_fetches_quotes();
+        $this->prepareFakeHttpResponse();
+
+        $this->assertSame('', $this->fetchQuotes->uniqueKey);
+
+        $this->fetchQuotes->mount();
+
+        $this->assertNotEmpty($this->fetchQuotes->uniqueKey);
     }
 
     #[Test]
     public function method_refreshQuotes_fetches_quotes(): void
     {
-        $this->method_fetchQuotes_fetches_quotes();
+        $this->prepareFakeHttpResponse();
+
+        $this->assertSame('', $this->fetchQuotes->uniqueKey);
+
+        $this->fetchQuotes->refreshQuotes();
+
+        $this->assertNotEmpty($this->fetchQuotes->uniqueKey);
+    }
+
+    private function prepareFakeHttpResponse(): void
+    {
+        session()->put('auth_token', '12345');
+        Config::set('app.random_quotes_number', 2);
+        Http::fake([
+            config('app.url') . '/api/quotes' => Http::response(['quotes' => ['I am the best', 'I am the greatest']], 200),
+        ]);
     }
 }
