@@ -11,14 +11,19 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\AssertsRandomUniqueQuotes;
+use Tests\Traits\LoginsUser;
 
 class FetchFiveRandomQuotesTest extends TestCase
 {
+    use RefreshDatabase;
     use AssertsRandomUniqueQuotes;
+    use LoginsUser;
 
     #[Test]
     public function fetches_five_random_unique_quotes(): void
     {
+        $this->createUserAndLogin();
+
         $response = $this->get('/api/quotes')
             ->assertStatus(200);
 
@@ -31,6 +36,8 @@ class FetchFiveRandomQuotesTest extends TestCase
     #[Test]
     public function quotes_are_dynamic(): void
     {
+        $this->createUserAndLogin();
+
         $responseOne = $this->get('/api/quotes')
             ->assertStatus(200);
 
@@ -50,6 +57,8 @@ class FetchFiveRandomQuotesTest extends TestCase
     #[Test]
     public function fails_when(int $code, string $errorMessage): void
     {
+        $this->createUserAndLogin();
+
         Http::fake([
             KanyeRestService::API_URI => Http::response('', $code)
         ]);
@@ -96,5 +105,12 @@ class FetchFiveRandomQuotesTest extends TestCase
                 'errorMessage' => 'Service unavailable.'
             ],
         ];
+    }
+
+    #[Test]
+    public function redirects_to_login_when_guest(): void
+    {
+        $this->get('/api/quotes')
+            ->assertRedirectToRoute('login');
     }
 }

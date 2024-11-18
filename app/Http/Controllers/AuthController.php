@@ -23,7 +23,7 @@ class AuthController extends Controller
         }
 
         session()->regenerate();
-        session()->put('token', auth()->user()->createToken('auth_token')->plainTextToken);
+        session()->put('auth_token', auth()->user()->createToken('auth_token')->plainTextToken);
 
         return to_route('home')->with([
             'success' => 'You have signed-in successfully.'

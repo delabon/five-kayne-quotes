@@ -13,7 +13,10 @@ class FetchQuotes extends Component
 
     public function fetchQuotes(): void
     {
-        $response = Http::get(config('app.url') . '/api/quotes');
+        $token = session()->get('auth_token');
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $token
+        ])->get(config('app.url') . '/api/quotes');
 
         if ($response->successful()) {
             $this->quotes = $response->json()['quotes'];

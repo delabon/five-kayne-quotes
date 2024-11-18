@@ -48,7 +48,7 @@ class LoginTest extends TestCase
         $this->assertNotSame($sessionIdBefore, session()->id());
 
         // Make sure a new token is generated
-        $response->assertSessionHas('token');
+        $response->assertSessionHas('auth_token');
     }
 
     #[Test]
