@@ -4,11 +4,12 @@ Open your terminal and run the following:
 
 ```sh
 composer install
-npm install && npm run build
-php artisan sail:install
-vendor/bin/sail up
-vendor/bin/sail artisan migrate
+vendor/bin/sail up -d
+cp .env.example .env
+vendor/bin/sail artisan key:generate
+vendor/bin/sail artisan migrate # select 'yes'
 vendor/bin/sail artisan db:seed
+npm install && npm run build
 ```
 
 Open: http://localhost
